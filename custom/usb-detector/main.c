@@ -10,7 +10,7 @@ void notify_user(const char *message) {
     snprintf(notify_cmd, sizeof(notify_cmd), "notify-send 'USB Event' '%s'", message);
     system(notify_cmd);
 
-    // Play a system sound (replace with your sound file if needed)
+    // Play a system sound 
     system("paplay sounds/usb.wav");
 }
 
