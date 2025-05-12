@@ -69,7 +69,8 @@ static const char *termcmd[]  = { "kitty", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_Print,      spawn,          SHCMD("flameshot gui") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("flameshot gui") },
+	{ MODKEY|ShiftMask,		XK_l,	   spawn, 	   SHCMD("~/.config/scripts/lock.sh") },	
 	{ MODKEY,                       XK_p,      spawndmenu,     {0} },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },

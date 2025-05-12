@@ -4,15 +4,20 @@
 #include <string.h>
 #include <unistd.h>
 
-void notify_user(const char *message) {
+void notify_user(const char *message, const char *vendor, const char *product) {
     // Send desktop notification
     char notify_cmd[512];
-    snprintf(notify_cmd, sizeof(notify_cmd), "notify-send 'USB Event' '%s'", message);
+    if(product || vendor){
+        snprintf(notify_cmd, sizeof(notify_cmd), "notify-send -u low 'USB Event' '%s'", message);
+    }else {
+        snprintf(notify_cmd, sizeof(notify_cmd), "notify-send -u critical 'USB Event' '%s'", message);
+    }
     system(notify_cmd);
-
     // Play a system sound 
     system("paplay sounds/usb.wav");
 }
+
+
 
 int main() {
     struct udev *udev;
@@ -26,6 +31,7 @@ int main() {
     }
 
     mon = udev_monitor_new_from_netlink(udev, "udev");
+    // udev_monitor_filter_add_match_subsystem_devtype(mon, "usb", NULL);
     udev_monitor_filter_add_match_subsystem_devtype(mon, "usb", "usb_device");
     udev_monitor_enable_receiving(mon);
 
@@ -50,7 +56,7 @@ int main() {
                     snprintf(message, sizeof(message), "Device Connected:%s %s",
                              vendor ? vendor : "Unknown Vendor",
                              product ? product : "Unknown Product");
-                    notify_user(message);
+                    notify_user(message, vendor, product);
                 }
 
                 udev_device_unref(dev);
